@@ -1,7 +1,3 @@
-
-Diamond Framework
-
-Descrição
-
-É um mini framework php criado para estudos, mas que pode ser utilizado para pequenos projetos
+Um clone do twitter utilizando o Diamond Framework PHP
+Sem estilização com css
 
