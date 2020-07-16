@@ -1,0 +1,7 @@
+
+Diamond Framework
+
+Descrição
+
+É um mini framework php criado para estudos, mas que pode ser utilizado para pequenos projetos
+
