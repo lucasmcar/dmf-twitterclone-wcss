@@ -11,50 +11,55 @@ class AppController extends Action
 {
     public function timeline()
     {
-        session_start();
+        
 
-        if($_SESSION['id'] != '' && $_SESSION['nome'])
-        {
-            $getTweetsDao = new TweetDAO();
+        $this->validaSessao();
 
-            $tweet  = Container::getModel('tweet');
+        
+        $getTweetsDao = new TweetDAO();
 
-            $tweet->setIdUsuario($_SESSION['id']);
+        $tweet  = Container::getModel('tweet');
 
-            $tweets = $getTweetsDao->pegarTweets($tweet);
+        $tweet->setIdUsuario($_SESSION['id']);
 
-            echo "<pre>";
-            print_r($tweets);
-            echo "</pre">
-            $this->render('timeline');
-        }
-        else
-        {
-            header('location: /?login=erro');
-        }
+        $tweets = $getTweetsDao->pegarTweets($tweet);
+
+        $this->view->tweets = $tweets;
+
+        $this->render('timeline');
+        
     }
 
     public function tweet()
     {
-        session_start();
+        
+        $this->validaSessao();
 
-        if($_SESSION['id'] != '' && $_SESSION['nome'])
-        {
-            $tweetPost = filter_input(INPUT_POST, 'tweetbox');
+        $tweetPost = filter_input(INPUT_POST, 'tweetbox');
 
-            $tweet = Container::getModel('tweet');
-            $tweet->setTweet( $tweetPost );
-            $tweet->setIdUsuario($_SESSION['id']);
+        $tweet = Container::getModel('tweet');
+        $tweet->setTweet( $tweetPost );
+        $tweet->setIdUsuario($_SESSION['id']);
 
-            $tDao = new TweetDAO();
+        $tDao = new TweetDAO();
 
-            $tDao->tweetar( $tweet );
+        $tDao->tweetar( $tweet );
 
-            header('location: /timeline');
+        header('location: /timeline');
 
             /*$this->render('timeline');*/
-        }
-        else
+        
+        
+    }
+
+    private function validaSessao()
+    {
+        session_start();
+
+        if(!isset($_SESSION['id']) ||
+        $_SESSION['id'] == '' || 
+        !isset($_SESSION['nome']) || 
+        $_SESSION['nome'] == '')
         {
             header('location: /?login=erro');
         }

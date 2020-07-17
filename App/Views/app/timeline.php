@@ -12,3 +12,12 @@
     <button type="submit">Tweetar</button>
 </div>
 </form>
+
+<?php foreach($this->view->tweets as $id_tweet => $tweet) { ?>
+ <div>
+    <?= $tweet['nome'] ?> <span><?= $tweet['dat'] ?></span>
+</div>
+ <div>
+    <p><?= $tweet['tweet'] ?></p>
+ </div>
+<?php } ?>

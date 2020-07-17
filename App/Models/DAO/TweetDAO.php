@@ -34,7 +34,9 @@ class TweetDAO
     {
         $conexao = Connection::getDb();
 
-        $getTweet = "SELECT id, id_usuario, tweet, dat FROM tweets WHERE id_usuario = :id_usuario"; 
+        $getTweet = " SELECT 
+            t.id, t.id_usuario, u.nome, t.tweet, DATE_FORMAT(t.dat, '%d/%m/%Y %H:%i') as dat
+            FROM tweets as t LEFT JOIN  usuarios as u on (t.id_usuario = u.id) WHERE id_usuario = :id_usuario ORDER BY t.dat DESC"; 
         $stmt = $conexao->prepare($getTweet);
         $stmt->bindValue(':id_usuario', $twt->getIdUsuario());
         $stmt->execute();
