@@ -21,3 +21,7 @@
     <p><?= $tweet['tweet'] ?></p>
  </div>
 <?php } ?>
+
+<div>
+    <a href="/seguir">Quem seguir</a>
+</div>

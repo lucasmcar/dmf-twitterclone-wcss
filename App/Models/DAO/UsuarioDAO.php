@@ -75,12 +75,24 @@ class UsuarioDAO extends Model
     {
         $conexao = Connection::getDb();
 
-        $selectBy = "SELECT nome, email FROM usuarios WHERE email = :email ";
-        $stmt = $conexao->prepare($selectBy);
-        $stmt->bindValue(':email', $usuario->getEmail());
-        $stmt->execute();
+       if($conexao != null)
+       {
+           try
+           {
+            $selectBy = "SELECT nome, email FROM usuarios WHERE email = :email ";
+            $stmt = $conexao->prepare($selectBy);
+            $stmt->bindValue(':email', $usuario->getEmail());
+            $stmt->execute();
+    
+            return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+           }
+           catch(\PDOException $ex)
+           {
+                echo "Erro: ".$ex->getMessage();
+           }
+       }
 
-        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+       return "Erro ao logar";
     }
 
     public function autenticar(Usuario $usuario)
@@ -101,6 +113,30 @@ class UsuarioDAO extends Model
         }
 
         return $user;
+    }
+
+    public function getUsuario(Usuario $usuario)
+    {
+
+        $conexao = Connection::getDb();
+        if($conexao != null)
+        {
+            try 
+            {
+                $select = "SELECT id, nome, email FROM USUARIOS where nome like :nome";
+                $stmt = $conexao->prepare($select);
+                $stmt->bindValue(':nome', '%'.$usuario->getNome().'%');
+                $stmt->execute();
+
+                return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            } 
+            catch (\PDOException $ex) 
+            {
+                echo "Erro: ".$ex->getMessage();  
+            }
+        }
+
+        return "Erro ao recuperar usuários";
     }
     
 }

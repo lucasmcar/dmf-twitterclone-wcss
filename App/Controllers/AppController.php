@@ -2,8 +2,8 @@
 
 namespace App\Controllers;
 
-use App\Connection;
 use App\Models\DAO\TweetDAO;
+use App\Models\DAO\UsuarioDAO;
 use DiamondFramework\Controller\Action;
 use DiamondFramework\Model\Container;
 
@@ -11,11 +11,8 @@ class AppController extends Action
 {
     public function timeline()
     {
-        
-
         $this->validaSessao();
 
-        
         $getTweetsDao = new TweetDAO();
 
         $tweet  = Container::getModel('tweet');
@@ -26,8 +23,7 @@ class AppController extends Action
 
         $this->view->tweets = $tweets;
 
-        $this->render('timeline');
-        
+        $this->render('timeline');  
     }
 
     public function tweet()
@@ -38,7 +34,7 @@ class AppController extends Action
         $tweetPost = filter_input(INPUT_POST, 'tweetbox');
 
         $tweet = Container::getModel('tweet');
-        $tweet->setTweet( $tweetPost );
+        $tweet->setTweet( trim($tweetPost) );
         $tweet->setIdUsuario($_SESSION['id']);
 
         $tDao = new TweetDAO();
@@ -50,6 +46,31 @@ class AppController extends Action
             /*$this->render('timeline');*/
         
         
+    }
+
+    public function seguir()
+    {
+        $this->validaSessao();
+
+        $pesquisa = filter_input(INPUT_GET, 'pesquisa');
+
+        $pesquisaPor = isset($pesquisa) ? $pesquisa : '';
+
+        $usuarios = array();
+
+        if($pesquisaPor != '')
+        {
+            $usuario = Container::getModel('Usuario');
+            $usuario->setNome( $pesquisaPor );
+
+            $dao = new UsuarioDAO();
+
+            $usuarios = $dao->getUsuario( $usuario );
+        }
+
+        $this->view->usuarios = $usuarios;
+
+        $this->render('seguir');
     }
 
     private function validaSessao()

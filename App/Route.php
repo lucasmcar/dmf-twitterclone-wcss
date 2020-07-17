@@ -6,7 +6,6 @@ use DiamondFramework\Init\Bootstrap;
 
 class Route extends Bootstrap
 {
-    
     /**
      * Method that initializes routes
      */
@@ -54,8 +53,13 @@ class Route extends Bootstrap
             'controller' => 'appController',
             'action' => 'tweet'
         );
+
+        $routes['seguir'] = array(
+            'route' => '/seguir',
+            'controller' => 'appController',
+            'action' => 'seguir'
+        );
         
         $this->setRoutes($routes);
     }
-  
 }
