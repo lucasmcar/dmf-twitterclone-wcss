@@ -5,11 +5,10 @@ namespace App\Models;
 
 class Usuario 
 {
-    
-    public function __construct()
-    {
-
-    }
+    private $id;
+    private $nome;
+    private $email;
+    private $senha;
 
     function getId() 
     {

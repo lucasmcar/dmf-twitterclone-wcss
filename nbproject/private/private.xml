@@ -5,8 +5,8 @@
         <group>
             <file>file:/C:/Projetos/twitter/vendor/DiamondFramework/Model/Model.php</file>
             <file>file:/C:/Projetos/twitter/App/Controllers/IndexController.php</file>
+            <file>file:/C:/Projetos/twitter/App/Controllers/AppController.php</file>
             <file>file:/C:/Projetos/twitter/App/Views/index/inscreverse.php</file>
-            <file>file:/C:/Projetos/twitter/App/Models/DAO/UsuarioDAO.php</file>
         </group>
     </open-files>
 </project-private>

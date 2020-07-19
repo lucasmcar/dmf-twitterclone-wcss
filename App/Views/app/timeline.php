@@ -2,6 +2,18 @@
 
 <a href="/sair">Sair</a>
 
+<div>
+    <div>
+        <?= $this->view->info_usuario['nome'] ?>
+    </div>
+        
+    <ul>
+        <li>Tweets <?=$this->view->total_tweets['total_tweets'] ?> </li>
+        <li>Seguidores <?= $this->view->total_seguidores['total_seguidores'] ?></li>
+        <li>Seguindo <?= $this->view->total_seguindo['total_seguindo'] ?></li>
+    </ul>
+</div>
+
 <form method="POST" action="/tweet">
 <div class="">
     <textarea name="tweetbox">
@@ -19,6 +31,13 @@
 </div>
  <div>
     <p><?= $tweet['tweet'] ?></p>
+ </div>
+ <div>
+     <?php if($tweet['id_usuario'] == $_SESSION['id']) { ?>
+        <form>
+            <button>Apagar tweet</button>
+        </form>
+     <?php } ?>
  </div>
 <?php } ?>
 

@@ -21,6 +21,17 @@ class AppController extends Action
 
         $tweets = $getTweetsDao->pegarTweets($tweet);
 
+        $usuario = Container::getModel('Usuario');
+        $usuario->SetId($_SESSION['id']);
+
+        $usuarioDao = new UsuarioDAO();
+        $tweetsDao = new TweetDAO();
+
+        $this->view->total_tweets = $tweetsDao->getTotalTweets($tweet);
+        $this->view->info_usuario = $usuarioDao->getInfo($usuario);
+        $this->view->total_seguidores = $usuarioDao->getTotalSeguidores($usuario);
+        $this->view->total_seguindo = $usuarioDao->getTotalSeguindo($usuario);
+
         $this->view->tweets = $tweets;
 
         $this->render('timeline');  
@@ -42,10 +53,6 @@ class AppController extends Action
         $tDao->tweetar( $tweet );
 
         header('location: /timeline');
-
-            /*$this->render('timeline');*/
-        
-        
     }
 
     public function seguir()
@@ -61,16 +68,62 @@ class AppController extends Action
         if($pesquisaPor != '')
         {
             $usuario = Container::getModel('Usuario');
-            $usuario->setNome( $pesquisaPor );
+            $usuario->setNome( trim($pesquisaPor) );
+            $usuario->setId( $_SESSION['id']);
 
             $dao = new UsuarioDAO();
 
             $usuarios = $dao->getUsuario( $usuario );
         }
 
+        $usuario = Container::getModel('Usuario');
+        $usuario->SetId($_SESSION['id']);
+
+        $usuarioDao = new UsuarioDAO();
+        $tweetsDao = new TweetDAO();
+        $tweet  = Container::getModel('tweet');
+
+        $tweet->setIdUsuario($_SESSION['id']);
+
+        $this->view->total_tweets = $tweetsDao->getTotalTweets($tweet);
+        $this->view->info_usuario = $usuarioDao->getInfo($usuario);
+        $this->view->total_seguidores = $usuarioDao->getTotalSeguidores($usuario);
+        $this->view->total_seguindo = $usuarioDao->getTotalSeguindo($usuario);
+
         $this->view->usuarios = $usuarios;
 
         $this->render('seguir');
+    }
+
+    public function acao()
+    {
+        $this->validaSessao();
+
+        //acao
+       $acoes = filter_input(INPUT_GET, 'acao');
+       $idUser = filter_input(INPUT_GET, 'id_usuario');
+
+       $acao = isset($acoes) ? $acoes : '';
+       $id_usuario_seguindo = isset($idUser) ? $idUser : '';
+        //idusuario
+
+        $usuario = Container::getModel('Usuario');
+
+        $usuario->setId($_SESSION['id']);
+        
+        print_r($_SESSION['id']);
+        $daoUsuario = new UsuarioDAO();
+
+        if($acao == 'seguir')
+        {
+            $daoUsuario->seguirUsuario($usuario, $id_usuario_seguindo);
+        }
+        else
+        {
+            $daoUsuario->deixarSeguir($usuario, $id_usuario_seguindo);
+        }
+
+        header('Location: /seguir');
     }
 
     private function validaSessao()

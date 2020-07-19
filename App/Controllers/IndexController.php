@@ -89,4 +89,6 @@ class IndexController extends Action
                $this->render('inscreverse');
            }
     }
+
+    
 }

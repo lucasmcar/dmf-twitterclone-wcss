@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use DiamondFramework\Model\Model;
 
-class Tweet extends Model
+class Tweet 
 {
 
     private $id;
