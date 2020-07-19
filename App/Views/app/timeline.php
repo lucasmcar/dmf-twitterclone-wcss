@@ -1,5 +1,11 @@
-<h2>Timeline</h2>
+<style>
 
+    .ativa
+    {
+        color: red;
+    }
+</style>
+<h2>Timeline</h2>
 <a href="/sair">Sair</a>
 
 <div>
@@ -40,6 +46,21 @@
      <?php } ?>
  </div>
 <?php } ?>
+
+<div>
+    <ul>
+        <li>
+            <a href="?pagina=1">Primeira</a>
+        </li>
+        <?php for($i = 1; $i <= $this->view->totalPaginas; $i++) {?>
+            <a class="<?= $this->view->pagina_ativa == $i ? 'ativa' : '' ?>" href="?pagina=<?= $i ?>"><?= $i ?></a>
+        <?php } ?>
+        <li>
+            <a href="?pagina=<?= $this->view->totalPaginas ?>">Última</a>
+        </li>
+    </ul>
+    <?= $this->view->totalPaginas ?>
+</div>
 
 <div>
     <a href="/seguir">Quem seguir</a>

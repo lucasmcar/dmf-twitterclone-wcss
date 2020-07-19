@@ -75,6 +75,51 @@ class TweetDAO extends Model
             }
         }
     }
+    //Por pagina
+    public function pegarTweetsPorPagina(Tweet $tweet, $limite, $offset)
+    {
+        $conexao = Connection::getDb();
 
-    
+        $getTweet = "SELECT 
+            t.id, 
+            t.id_usuario, 
+            u.nome, 
+            t.tweet, 
+            DATE_FORMAT(t.dat, '%d/%m/%Y %H:%i') as dat
+            FROM tweets as t 
+            LEFT JOIN  usuarios as u 
+            on (t.id_usuario = u.id) 
+            WHERE t.id_usuario = :id_usuario
+            or
+            t.id_usuario in (SELECT id_usuario_seguindo FROM usuario_seguidores WHERE id_usuario = :id_usuario)
+            ORDER BY t.dat DESC
+            LIMIT $limite
+            OFFSET $offset"; 
+        $stmt = $conexao->prepare($getTweet);
+        $stmt->bindValue(':id_usuario', $tweet->getIdUsuario());
+        $stmt->execute();
+
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    //Total Tweets
+    public function pegarTotalRegistros(Tweet $tweet)
+    {
+        $conexao = Connection::getDb();
+
+        $getTweet = "SELECT 
+            count(*) as total
+            FROM tweets as t 
+            LEFT JOIN  usuarios as u 
+            on (t.id_usuario = u.id) 
+            WHERE t.id_usuario = :id_usuario
+            or
+            t.id_usuario in (SELECT id_usuario_seguindo FROM usuario_seguidores WHERE id_usuario = :id_usuario)"; 
+        $stmt = $conexao->prepare($getTweet);
+        $stmt->bindValue(':id_usuario', $tweet->getIdUsuario());
+        $stmt->execute();
+
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
+    }
+
 }

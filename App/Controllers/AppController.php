@@ -13,25 +13,33 @@ class AppController extends Action
     {
         $this->validaSessao();
 
-        $getTweetsDao = new TweetDAO();
-
         $tweet  = Container::getModel('tweet');
-
-        $tweet->setIdUsuario($_SESSION['id']);
-
-        $tweets = $getTweetsDao->pegarTweets($tweet);
-
         $usuario = Container::getModel('Usuario');
-        $usuario->SetId($_SESSION['id']);
 
+        $getTweetsDao = new TweetDAO();
         $usuarioDao = new UsuarioDAO();
         $tweetsDao = new TweetDAO();
+
+        $tweet->setIdUsuario($_SESSION['id']);
+        $usuario->SetId($_SESSION['id']);
 
         $this->view->total_tweets = $tweetsDao->getTotalTweets($tweet);
         $this->view->info_usuario = $usuarioDao->getInfo($usuario);
         $this->view->total_seguidores = $usuarioDao->getTotalSeguidores($usuario);
         $this->view->total_seguindo = $usuarioDao->getTotalSeguindo($usuario);
 
+        //Variaveis de paginacao
+        $total_registros = 10;
+
+        $pagina = isset($_GET['pagina']) ? $_GET['pagina'] : 1;
+
+        $deslocamento = ($pagina-1) * $total_registros;
+
+        //$tweets = $getTweetsDao->pegarTweets($tweet);
+        $tweets = $getTweetsDao->pegarTweetsPorPagina($tweet, $total_registros, $deslocamento);
+        $total_tweets = $tweetsDao->pegarTotalRegistros($tweet);
+        $this->view->totalPaginas = ceil($total_tweets['total']/$total_registros);
+        $this->view->pagina_ativa = $pagina;
         $this->view->tweets = $tweets;
 
         $this->render('timeline');  
